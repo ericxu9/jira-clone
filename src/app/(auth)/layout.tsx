@@ -14,9 +14,9 @@ const AuthLayout = ({ children }: Props) => {
           <Image src="/logo.svg" height={56} width={152} alt="Logo" />
           <Button variant="secondary">Sign Up</Button>
         </nav>
-      </div>
-      <div className="flex flex-col items-center justify-center pt-4 md:pt-14">
-        {children}
+        <div className="flex flex-col items-center justify-center pt-4 md:pt-14">
+          {children}
+        </div>
       </div>
     </main>
   );
