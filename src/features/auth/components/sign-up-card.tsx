@@ -22,7 +22,28 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+const formSchema = z.object({
+  name: z.string().trim().min(1, "Required"),
+  email: z.string().email(),
+  password: z.string().min(8, "Minimum of 8 characters required"),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+const onSubmit = (values: FormData) => {
+  console.log(values);
+};
+
 const SignUpCard = () => {
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
       <CardHeader>
@@ -42,37 +63,61 @@ const SignUpCard = () => {
         <DottedSeparator />
       </div>
       <CardContent className="p-7">
-        <form className="space-y-4">
-          <Input
-            required
-            type="text"
-            value={""}
-            onChange={() => {}}
-            placeholder="Enter your name"
-            disabled={false}
-          />
-          <Input
-            required
-            type="email"
-            value={""}
-            onChange={() => {}}
-            placeholder="Enter your email address"
-            disabled={false}
-          />
-          <Input
-            required
-            type="password"
-            value={""}
-            onChange={() => {}}
-            placeholder="Enter your password"
-            disabled={false}
-            min={8}
-            max={256}
-          />
-          <Button disabled={false} size="lg" className="w-full">
-            Sign Up
-          </Button>
-        </form>
+        <Form {...form}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="Enter your name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="Enter your email address"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="Enter your password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button disabled={false} size="lg" className="w-full">
+              Sign Up
+            </Button>
+          </form>
+        </Form>
       </CardContent>
       <div className="px-7">
         <DottedSeparator />
@@ -100,14 +145,14 @@ const SignUpCard = () => {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <div className="p-7 flex items-center justify-center">
+      <CardContent className="p-7 flex items-center justify-center">
         <p className="">
           Already have an account?{" "}
           <Link href="/sign-in">
             <span className="text-blue-700">Login</span>
           </Link>
         </p>
-      </div>
+      </CardContent>
     </Card>
   );
 };
