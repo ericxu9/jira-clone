@@ -15,26 +15,26 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { loginSchema } from "../schemas";
+import { useLogin } from "../api/user-login";
 
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, "Password is required."),
-});
-
-type FormData = z.infer<typeof formSchema>;
-
-const onSubmit = (values: FormData) => {
-  console.log(values);
-};
+type FormData = z.infer<typeof loginSchema>;
 
 const SignInCard = () => {
+  const { mutate } = useLogin();
+
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
+
+  const onSubmit = (values: FormData) => {
+    mutate({ json: values });
+  };
+
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
       <CardHeader>

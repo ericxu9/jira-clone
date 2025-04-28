@@ -1,23 +1,13 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-export const runtime = "edge";
+import auth from "@/features/auth/server/route"
 
 const app = new Hono().basePath("/api");
 
-app.get("/hello", (c) => {
-  return c.json({
-    message: "Hello Next.js!",
-  });
-});
-
-app.get("/user/:name", async (c) => {
-  const name = c.req.param("name");
-  // ...
-  return c.json({
-    name,
-  });
-});
+const routes = app.route("/auth", auth);
 
 export const GET = handle(app);
 export const POST = handle(app);
+
+export type AppType = typeof routes
